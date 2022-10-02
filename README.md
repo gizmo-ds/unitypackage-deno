@@ -1,5 +1,9 @@
 # unitypackage-deno
 
+![Deno](https://img.shields.io/badge/-Deno-4f4f4f?logo=deno&style=flat)
+![Latest tag](https://img.shields.io/github/v/tag/GizmoOAO/unitypackage-deno?label=latest)
+[![License](https://img.shields.io/github/license/GizmoOAO/unitypackage-deno)](./LICENSE)
+
 ## Usage
 
 ```typescript
