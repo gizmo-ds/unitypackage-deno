@@ -24,7 +24,9 @@ export class unitypackage {
     const _filename = join(this.path, filename);
     const _metafile = _filename + ".meta";
     const meta = parseYAML(await Deno.readTextFile(_metafile)) as Meta;
-    const pathname = new TextEncoder().encode([root, filename].join("/"));
+    const pathname = new TextEncoder().encode(
+      join(root, filename).replaceAll("\\", "/")
+    );
     await this.tar.append([meta.guid, "pathname"].join("/"), {
       reader: new Buffer(pathname),
       contentSize: pathname.byteLength,
@@ -43,6 +45,7 @@ export class unitypackage {
       })
     );
   }
+
   public getReader() {
     return this.tar.getReader();
   }
