@@ -3,6 +3,7 @@ import { Tar } from "https://deno.land/std@0.158.0/archive/tar.ts";
 import { Buffer } from "https://deno.land/std@0.158.0/io/buffer.ts";
 import { copy } from "https://deno.land/std@0.158.0/streams/conversion.ts";
 import { parse as parseYAML } from "https://deno.land/std@0.158.0/encoding/yaml.ts";
+import { gzipSync } from "https://cdn.skypack.dev/fflate@0.7.4";
 
 interface Meta {
   guid: string;
@@ -46,16 +47,16 @@ export class unitypackage {
     );
   }
 
-  public getReader() {
-    return this.tar.getReader();
+  public async getData() {
+    const buf = new Buffer();
+    await copy(this.tar.getReader(), buf);
+    return gzipSync(buf.bytes(), {
+      filename: "archtemp.tar",
+      level: 9,
+    }) as Uint8Array;
   }
 
   public async save(filename: string) {
-    const writer = await Deno.open(filename, {
-      write: true,
-      create: true,
-    });
-    await copy(this.getReader(), writer);
-    writer.close();
+    await Deno.writeFile(filename, await this.getData());
   }
 }
